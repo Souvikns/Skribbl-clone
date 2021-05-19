@@ -56,7 +56,7 @@ app.use(express.static(path.join(__dirname,'public')));
 
 app.get('/niks',(req,res)=>{
 
-    res.sendFile(__dirname + '/public/nikunj.html');
+    res.sendFile(path.join(__dirname , './public','nikunj.html'));
 
 
 
