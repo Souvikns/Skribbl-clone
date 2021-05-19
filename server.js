@@ -47,7 +47,7 @@ um.emit('message',ms);
 
 app.use(express.static(path.join(__dirname,'public')));
 
-app.get('/niks',(req,res)=>{
+app.get('/',(req,res)=>{
 
     res.sendFile(path.join(__dirname , './public','nikunj.html'));
 
