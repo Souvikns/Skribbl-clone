@@ -5,7 +5,7 @@ const form = document.getElementById('chat-form');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight/2;
 
-//var io = io.connect(window.location.host);
+var io = io.connect(window.location.host);
 console.log(window.location.host);
 form.addEventListener('submit',(e)=>{
 
