@@ -11,7 +11,7 @@ form.addEventListener('submit',(e)=>{
 
 e.preventDefault();
 let msg = e.target.elements.msg.value;
-
+e.target.elements.msg.value="";
 io.emit('mssg',msg);
 
 
@@ -43,15 +43,31 @@ io.on('message',(me)=>{
 });
 
 let x,y;
+var mdown = false;
+window.onmousedown = e=>{
+
+mdown = true;
+
+}
+
+window.onmouseup = e =>{
+
+mdown = false;
+
+}
+
 window.onmousemove = e =>{
 
 x = e.clientX;
 y = e.clientY;
 console.log(x,y);
-io.emit('draw',{x,y});
+if(mdown){
+    io.emit('draw',{x,y});
 
-context.lineTo(x,y);
-context.stroke();
+    context.lineTo(x,y);
+    context.stroke();
+    
+}
 
 
 
