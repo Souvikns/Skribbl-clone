@@ -2,14 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const httpserver = require('http').createServer(app);
-const socket = require('socket.io')(httpserver,{
-
-cors:{
-    origin:"https://drawersoc.herokuapp.com/",
-    methods:["GET","POST"]
-}
-
-});
+const socket = require('socket.io')(httpserver);
 
 let connections = [];
 socket.on('connect',(sockt)=>{
