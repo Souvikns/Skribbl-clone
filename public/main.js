@@ -56,6 +56,24 @@ mdown = false;
 
 }
 
+canvas.addEventListener('touchmove',(e)=>{
+
+    mdown =  true
+    var touch = e.touches[0];
+
+x = touch.clientX;
+y = touch.clientY;
+    if(mdown){
+        io.emit('draw',{x,y});
+    
+        context.lineTo(x,y);
+        context.stroke();
+        
+    }
+    
+});
+
+
 window.onmousemove = e =>{
 
 x = e.clientX;
