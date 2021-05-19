@@ -5,7 +5,7 @@ const httpserver = require('http').createServer(app);
 const socket = require('socket.io')(httpserver,{
 
 cors:{
-    origin:"http://localhost:3000/",
+    origin:"https://drawersoc.herokuapp.com/",
     methods:["GET","POST"]
 }
 
