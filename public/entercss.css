@@ -15,11 +15,6 @@
     place-items: center;
   }
   
-  .grid {
-    inline-size: 90%;
-    margin-inline: auto;
-    max-inline-size: 20rem;
-  }
   
   /* helpers/hidden.css */
   
@@ -212,5 +207,20 @@
   
   .text--center {
     text-align: center;
+  }
+
+  #flex-container{
+
+width: 100%;
+display: flex;
+
+
+  }
+
+  #flex-container .grid {
+    inline-size: 90%;
+    margin-inline: auto;
+    flex: 1;
+    max-inline-size: 20rem;
   }
   

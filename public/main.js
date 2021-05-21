@@ -5,14 +5,17 @@ const form = document.getElementById('chat-form');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight/2;
 
+
+var allusers = [];
+
 let user_name = localStorage.getItem('name');
 let room_name = localStorage.getItem('rname');
 
 var io = io.connect(window.location.host);
 
+// for joining user
 
-
-io.emit('create',room_name);
+io.emit('create',{user_name,room_name});
 
 console.log(window.location.host);
 form.addEventListener('submit',(e)=>{
@@ -23,18 +26,37 @@ e.target.elements.msg.value="";
 io.emit('mssg',msg);
 
 
+});
+
+
+    io.on('sendall' , (users)=>{
+users.forEach(e=>{
+    console.log(e.username);
+
 })
+        allusers.splice(0,users.length,...users);
 
+allusers.forEach(e=>{
+    console.log(e.username);
+})
+console.log(allusers);
 
-    
+    });
 
 
 io.on('ondrawtoclient',({x,y})=>{
 
-    context.lineTo(x,y);
-    context.stroke();
-    
+    // context.lineTo(x,y);
+    // context.stroke();
+    console.log(x,y);
+   // context.moveTo(x,y);
 
+    // x = e.clientX - canvas.offsetLeft;
+    // y = e.clientY - canvas.offsetTop;
+    
+    context.lineTo(x,y)
+        // context.lineTo(x,y);
+        context.stroke();
 
 });
 
@@ -55,6 +77,8 @@ var mdown = false;
 window.onmousedown = e=>{
 
 mdown = true;
+x = e.clientX - canvas.offsetLeft;
+y = e.clientY - canvas.offsetTop;
 
 }
 
@@ -84,13 +108,21 @@ y = touch.clientY;
 
 window.onmousemove = e =>{
 
-x = e.clientX;
-y = e.clientY;
-console.log(x,y);
+// x = e.clientX;
+// y = e.clientY;
+// console.log(x,y);
 if(mdown){
-    io.emit('draw',{x,y});
 
-    context.lineTo(x,y);
+context.beginPath();
+
+    io.emit('draw',{x,y,room_name});
+context.moveTo(x,y);
+
+x = e.clientX - canvas.offsetLeft;
+y = e.clientY - canvas.offsetTop;
+
+context.lineTo(x,y)
+    // context.lineTo(x,y);
     context.stroke();
     
 }
