@@ -13,9 +13,17 @@ cors:{
 app.use(express.static(path.join(__dirname,'public')));
 
 let connections = [];
+
+// socket connection function
 socket.on('connect',(sockt)=>{
-console.log('new user');
+console.log('new socket craeted',sockt.id);
 connections.push(sockt);
+
+sockt.on('create',(room_name)=>{
+sockt.join(room_name);
+console.log('you joined',room_name);
+
+});
 
 sockt.on('draw',(data)=>{
 
@@ -23,7 +31,6 @@ connections.forEach(user=>{
 
 
     if(user.id!==sockt.id){
-        https://drawersoc.herokuapp.com/
         
 user.emit('ondrawtoclient',{x:data.x,y:data.y});
     }
@@ -53,14 +60,24 @@ um.emit('message',ms);
 })
 
 
+// landing route
 
 app.get('/',(req,res)=>{
+
+    res.sendFile(path.join(__dirname , './public','enter.html'));
+
+
+
+});
+
+app.get('/joinroom',(req,res)=>{
+
 
     res.sendFile(path.join(__dirname , './public','nikunj.html'));
 
 
+});
 
-})
 
 const port  = process.env.PORT || 3000;
 

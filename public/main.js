@@ -5,7 +5,15 @@ const form = document.getElementById('chat-form');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight/2;
 
+let user_name = localStorage.getItem('name');
+let room_name = localStorage.getItem('rname');
+
 var io = io.connect(window.location.host);
+
+
+
+io.emit('create',room_name);
+
 console.log(window.location.host);
 form.addEventListener('submit',(e)=>{
 
