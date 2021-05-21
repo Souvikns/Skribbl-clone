@@ -3,7 +3,7 @@ var context = canvas.getContext('2d');
 const form = document.getElementById('chat-form');
 
 canvas.width = window.innerWidth;
-canvas.height = window.innerHeight/2;
+canvas.height = window.innerHeight / 2;
 
 let user_name = localStorage.getItem('name');
 let room_name = localStorage.getItem('rname');
@@ -12,88 +12,92 @@ var io = io.connect(window.location.host);
 
 
 
-io.emit('create',room_name);
+io.emit('create', room_name);
 
 console.log(window.location.host);
-form.addEventListener('submit',(e)=>{
+form.addEventListener('submit', (e) => {
 
-e.preventDefault();
-let msg = e.target.elements.msg.value;
-e.target.elements.msg.value="";
-io.emit('mssg',msg);
+    e.preventDefault();
+    let msg = e.target.elements.msg.value;
+    e.target.elements.msg.value = "";
+    io.emit('mssg', msg);
 
 
 })
 
 
-    
 
 
-io.on('ondrawtoclient',({x,y})=>{
 
-    context.lineTo(x,y);
+io.on('ondrawtoclient', ({ x, y }) => {
+
+    //context.lineTo(x,y);
+    //context.fillRect(x,y,5,5);
+    context.beginPath();
+    context.arc(x, y, 1, 0, 4 * Math.PI, true);
     context.stroke();
-    
 
 
 });
 
-io.on('message',(me)=>{
+io.on('message', (me) => {
 
     //create div and append to dom
 
-     const div = document.createElement('div');
-     div.classList.add('message');
-     div.innerHTML = `<p class="text">${me}</p>`
+    const div = document.createElement('div');
+    div.classList.add('message');
+    div.innerHTML = `<p class="text">${me}</p>`
 
-     document.querySelector('.chat-messages').appendChild(div);
+    document.querySelector('.chat-messages').appendChild(div);
 
 });
 
-let x,y;
+let x, y;
 var mdown = false;
-window.onmousedown = e=>{
+window.onmousedown = e => {
 
-mdown = true;
-
-}
-
-window.onmouseup = e =>{
-
-mdown = false;
+    mdown = true;
 
 }
 
-canvas.addEventListener('touchmove',(e)=>{
+window.onmouseup = e => {
 
-    mdown =  true
+    mdown = false;
+
+}
+
+canvas.addEventListener('touchmove', (e) => {
+
+    mdown = true
     var touch = e.touches[0];
 
-x = touch.clientX;
-y = touch.clientY;
-    if(mdown){
-        io.emit('draw',{x,y});
-    
-        context.lineTo(x,y);
+    x = touch.clientX;
+    y = touch.clientY;
+    if (mdown) {
+        io.emit('draw', { x, y });
+
+        context.lineTo(x, y);
         context.stroke();
-        
+
     }
-    
+
 });
 
 
-window.onmousemove = e =>{
+window.onmousemove = e => {
 
-x = e.clientX;
-y = e.clientY;
-console.log(x,y);
-if(mdown){
-    io.emit('draw',{x,y});
+    x = e.clientX;
+    y = e.clientY;
+    console.log(x, y);
+    if (mdown) {
+        io.emit('draw', { x, y });
 
-    context.lineTo(x,y);
-    context.stroke();
-    
-}
+        //context.lineTo(x,y);
+        //context.fillRect(x,y,5,5);
+        context.beginPath();
+        context.arc(x, y, 1, 0, 4 * Math.PI, true);
+        context.stroke();
+    }
 
 
 
