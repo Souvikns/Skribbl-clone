@@ -6,11 +6,11 @@
   "scripts": {
     "test": "npm start",
     "start": "node server.js"
-
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "canvas-free-drawing": "^2.1.0",
     "express": "^4.17.1",
     "socket.io": "^4.1.2"
   }
