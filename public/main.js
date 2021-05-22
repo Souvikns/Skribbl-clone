@@ -117,15 +117,38 @@ window.onmouseup = e => {
 
 }
 
-canvas.addEventListener('touchmove', (e) => {
+// canvas.addEventListener('touchmove', (e) => {
 
-    mdown = true
-    var touch = e.touches[0];
+//     mdown = true
+//     var touch = e.touches[0];
 
-    x = touch.clientX;
-    y = touch.clientY;
+//     x = touch.clientX;
+//     y = touch.clientY;
+//     if (mdown) {
+
+
+//         context.beginPath();
+
+//         io.emit('draw', { x, y, room_name });
+//         context.moveTo(x, y);
+
+//         x = e.clientX - canvas.offsetLeft;
+//         y = e.clientY - canvas.offsetTop;
+
+//         context.lineTo(x, y)
+//         // context.lineTo(x,y);
+//         context.stroke();
+//     }
+
+// });
+
+
+window.onmousemove = e => {
+
+    // x = e.clientX;
+    // y = e.clientY;
+    // console.log(x,y);
     if (mdown) {
-
 
         context.beginPath();
 
@@ -138,29 +161,6 @@ canvas.addEventListener('touchmove', (e) => {
         context.lineTo(x, y)
         // context.lineTo(x,y);
         context.stroke();
-    }
-
-});
-
-
-window.onmousemove = e => {
-
-    // x = e.clientX;
-    // y = e.clientY;
-    // console.log(x,y);
-    if (mdown) {
-
-        // context.beginPath();
-
-        io.emit('draw', { x, y, room_name });
-        // context.moveTo(x, y);
-
-        // x = e.clientX - canvas.offsetLeft;
-        // y = e.clientY - canvas.offsetTop;
-
-        // context.lineTo(x, y)
-        // // context.lineTo(x,y);
-        // context.stroke();
 
     }
 
