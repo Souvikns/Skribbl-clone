@@ -150,17 +150,17 @@ window.onmousemove = e => {
     // console.log(x,y);
     if (mdown) {
 
-        context.beginPath();
+        // context.beginPath();
 
         io.emit('draw', { x, y, room_name });
-        context.moveTo(x, y);
+        // context.moveTo(x, y);
 
-        x = e.clientX - canvas.offsetLeft;
-        y = e.clientY - canvas.offsetTop;
+        // x = e.clientX - canvas.offsetLeft;
+        // y = e.clientY - canvas.offsetTop;
 
-        context.lineTo(x, y)
-        // context.lineTo(x,y);
-        context.stroke();
+        // context.lineTo(x, y)
+        // // context.lineTo(x,y);
+        // context.stroke();
 
     }
 
