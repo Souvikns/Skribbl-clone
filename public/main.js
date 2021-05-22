@@ -2,7 +2,7 @@ var canvas = document.getElementById('canva');
 var context = canvas.getContext('2d');
 const form = document.getElementById('chat-form');
 
-canvas.width = window.innerWidth;
+canvas.width = 400;
 canvas.height = window.innerHeight;
 
 context.strokeStyle = 'white';
