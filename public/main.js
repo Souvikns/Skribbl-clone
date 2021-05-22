@@ -49,17 +49,17 @@ io.on('sendall', (users) => {
 
 
 
-setInterval(() => {
-    pointer++;
+// setInterval(() => {
+//     pointer++;
 
-    io.emit('generate', (val)=>{
+//     io.emit('generate', (val)=>{
 
-val.innerText = val;
+// val.innerText = val;
 
-    });
+//     });
 
 
-}, 10000);
+// }, 10000);
 
 
 
