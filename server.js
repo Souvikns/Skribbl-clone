@@ -61,7 +61,7 @@ fu(randval());
     sockt.on('draw', (data) => {
 
 
-        socket.sockets.in(data.room_name).emit('ondrawtoclient', { x: data.x, y: data.y });
+        socket.to(data.room_name).emit('ondrawtoclient', { x: data.x, y: data.y });
 
         // if (sockt.id === data.user_id) {
 

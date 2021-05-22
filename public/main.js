@@ -1,7 +1,6 @@
 var canvas = document.getElementById('canva');
 var context = canvas.getContext('2d');
 const form = document.getElementById('chat-form');
-const val = document.getElementById('nameword');
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -117,30 +116,30 @@ window.onmouseup = e => {
 
 }
 
-// canvas.addEventListener('touchmove', (e) => {
+canvas.addEventListener('touchmove', (e) => {
 
-//     mdown = true
-//     var touch = e.touches[0];
+    mdown = true
+    var touch = e.touches[0];
 
-//     x = touch.clientX;
-//     y = touch.clientY;
-//     if (mdown) {
+    x = touch.clientX;
+    y = touch.clientY;
+    if (mdown) {
 
 
-//         context.beginPath();
+        context.beginPath();
 
-//         io.emit('draw', { x, y, room_name });
-//         context.moveTo(x, y);
+        io.emit('draw', { x, y, room_name });
+        context.moveTo(x, y);
 
-//         x = e.clientX - canvas.offsetLeft;
-//         y = e.clientY - canvas.offsetTop;
+        x = e.clientX - canvas.offsetLeft;
+        y = e.clientY - canvas.offsetTop;
 
-//         context.lineTo(x, y)
-//         // context.lineTo(x,y);
-//         context.stroke();
-//     }
+        context.lineTo(x, y)
+        // context.lineTo(x,y);
+        context.stroke();
+    }
 
-// });
+});
 
 
 window.onmousemove = e => {

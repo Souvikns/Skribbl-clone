@@ -17,8 +17,9 @@ e.preventDefault();
 localStorage.setItem('name',name);
 localStorage.setItem('rname',room_name);
 
-window.open("https://drawersoc.herokuapp.com/joinroom");
+window.open("http://localhost:3000/joinroom");
 //"http://localhost:3000/joinroom"
+//"https://drawersoc.herokuapp.com/joinroom"
 });
 
 join.addEventListener('click',(e)=>{
@@ -39,7 +40,7 @@ e.preventDefault();
 localStorage.setItem('name',name);
 localStorage.setItem('rname',room_name);
 
-window.open("https://drawersoc.herokuapp.com/joinroom");
+window.open("http://localhost:3000/joinroom");
 
 
 
