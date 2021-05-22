@@ -1,6 +1,7 @@
 var canvas = document.getElementById('canva');
 var context = canvas.getContext('2d');
 const form = document.getElementById('chat-form');
+const val = document.getElementById('nameword');
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -54,7 +55,7 @@ setInterval(() => {
 
     io.emit('generate', (val)=>{
 
-alert(val);
+val.innerText = val;
 
     });
 

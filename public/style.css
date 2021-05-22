@@ -157,6 +157,10 @@ a {
 	display: flex;
 	height: 100%;
 }
+#nameword{
+color: white;
+font-size: 50px;
+}
 
 .flex-container .cancol{
 height: 100%;
