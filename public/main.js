@@ -5,12 +5,14 @@ const ulist = document.getElementById('users');
 const chatmessages = document.querySelector('.chat-messages');
 const fetchword = document.getElementById('worrd');
 const countdown = document.getElementById('timer');
+const cancont = document.querySelector('.cancol');
 var timer = 20;
 var currentturn="";
 var currentword="";
 
-canvas.width = 800;
-canvas.height =600;
+canvas.width = cancont.offsetWidth;
+canvas.height = cancont.offsetHeight;
+
 
 context.strokeStyle = 'white';
 
@@ -110,7 +112,7 @@ setInterval(() => {
 
 
 
-}, 20000);
+}, 5000);
 
 
 
@@ -196,7 +198,7 @@ canvas.addEventListener('touchmove', (e) => {
     if (mdown && currentturn === user_name) {
 
 
-        context.beginPath();
+     //   context.beginPath();
 
         io.emit('draw', { x, y, room_name });
         //  context.moveTo(x, y);
