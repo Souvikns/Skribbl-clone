@@ -1,9 +1,16 @@
 var canvas = document.getElementById('canva');
 var context = canvas.getContext('2d');
 const form = document.getElementById('chat-form');
+const ulist = document.getElementById('users');
+const chatmessages = document.querySelector('.chat-messages');
+const fetchword = document.getElementById('worrd');
+const countdown = document.getElementById('timer');
+var timer = 20;
+var currentturn="";
+var currentword="";
 
-canvas.width = 400;
-canvas.height = window.innerHeight;
+canvas.width = 800;
+canvas.height =600;
 
 context.strokeStyle = 'white';
 
@@ -18,6 +25,7 @@ var io = io.connect(window.location.host);
 // for joining user
 
 io.emit('create', { user_name, room_name });
+
 
 console.log(window.location.host);
 form.addEventListener('submit', (e) => {
@@ -36,30 +44,73 @@ io.on('sendall', (users) => {
 
     // })
     allusers.splice(0, users.length, ...users);
+    displayusers();
+    // allusers.forEach(e => {
+    //     if (e.username === user_name) {
+    //         userid = e.userid;
+    //     }
+    // })
 
-    allusers.forEach(e => {
-        if (e.username === user_name) {
-            userid = e.userid;
-        }
-        console.log(e.username);
-    })
-    console.log(allusers);
+
 
 });
 
+io.on('remove', (id) => {
+
+    allusers.filter((user, index) => {
+
+        if (user.id === id) {
+            allusers.splice(index, 1);
+        }
+        displayusers();
+    });
 
 
-// setInterval(() => {
-//     pointer++;
+});
 
-//     io.emit('generate', (val)=>{
+// event for saving word
 
-// val.innerText = val;
+io.on('saveword', (crw) => {
 
-//     });
+    currentword = crw;
+
+})
+
+// function for timer
+const time = () => {
+
+    setInterval(() => {
+        if (timer !== 0) {
+            countdown.innerText = timer--;
+
+        }
 
 
-// }, 10000);
+    }, 1000);
+
+}
+
+
+setInterval(() => {
+    timer = 20;
+   // context.clearRect(0,0,canvas.width,canvas.height);
+   // context.beginPath();
+    pointer++;
+    currentturn = allusers[pointer%allusers.length].username;
+    if (currentturn === user_name) {
+        io.emit('generate', (val) => {
+
+           // fetchword.innerText = val;
+
+        });
+        io.emit('currentw', currentword);
+    //    time();
+
+    }
+
+
+
+}, 20000);
 
 
 
@@ -97,17 +148,36 @@ io.on('message', (me) => {
     div.innerHTML = `<p class="meta">${me.name}</p><p class="text">${me.message}</p>`
 
     document.querySelector('.chat-messages').appendChild(div);
+    chatmessages.scrollTop = chatmessages.scrollHeight;
 
 });
 
-let x, y;
+io.on('mover', ({ x, y }) => {
+
+        context.moveTo(x, y);
+
+    
+})
+
+var x, y;
+var lastx,lasty;
 var mdown = false;
 window.onmousedown = e => {
 
-    mdown = true;
-    x = e.clientX - canvas.offsetLeft;
-    y = e.clientY - canvas.offsetTop;
+    if (currentturn === user_name) {
 
+        
+   //     context.beginPath();
+        
+        
+         context.moveTo(x, y);
+        // context.lineTo(x,y);
+        // context.closePath();
+        // context.stroke();
+        io.emit('down', { x, y, room_name });
+        mdown = true;
+
+    }
 }
 
 window.onmouseup = e => {
@@ -123,16 +193,16 @@ canvas.addEventListener('touchmove', (e) => {
 
     x = touch.clientX;
     y = touch.clientY;
-    if (mdown) {
+    if (mdown && currentturn === user_name) {
 
 
         context.beginPath();
 
         io.emit('draw', { x, y, room_name });
-        context.moveTo(x, y);
+        //  context.moveTo(x, y);
 
-        x = e.clientX - canvas.offsetLeft;
-        y = e.clientY - canvas.offsetTop;
+        // x = e.clientX - canvas.offsetLeft;
+        // y = e.clientY - canvas.offsetTop;
 
         context.lineTo(x, y)
         // context.lineTo(x,y);
@@ -144,24 +214,38 @@ canvas.addEventListener('touchmove', (e) => {
 
 window.onmousemove = e => {
 
-    // x = e.clientX;
-    // y = e.clientY;
+    x = e.clientX;
+    y = e.clientY;
     // console.log(x,y);
-    if (mdown) {
-
-        context.beginPath();
-
+    if (mdown && currentturn === user_name) {
         io.emit('draw', { x, y, room_name });
-        context.moveTo(x, y);
-
-        x = e.clientX - canvas.offsetLeft;
-        y = e.clientY - canvas.offsetTop;
-
-        context.lineTo(x, y)
-        // context.lineTo(x,y);
+       
+        context.lineTo(x,y);
+      //  context.closePath();
         context.stroke();
+console.log(x,y);
+        
+        // x = e.clientX - canvas.offsetLeft;
+        // y = e.clientY - canvas.offsetTop;
+
+        // context.lineTo(x,y);
 
     }
+
+
+
+}
+
+function displayusers() {
+    ulist.innerHTML = '';
+    allusers.forEach(user => {
+        if (user.username === user_name) {
+            userid = user.id;
+        }
+        const l = document.createElement('li');
+        l.innerText = user.username;
+        ulist.appendChild(l);
+    })
 
 
 

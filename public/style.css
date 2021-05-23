@@ -161,7 +161,12 @@ a {
 color: white;
 font-size: 50px;
 }
-
+#canva{
+	top:0;
+	left: 0;
+	right: 0;
+	position: absolute;
+}
 .flex-container .cancol{
 height: 100%;
 width: 50%;

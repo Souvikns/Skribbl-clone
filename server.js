@@ -33,6 +33,8 @@ socket.on('connect', (sockt) => {
     sockt.on('create', (user_data) => {
 
         const { user_name, room_name } = user_data;
+        sockt.room_name = room_name;
+        sockt.user_name = user_name;
         // create a new room default 1 user will be there 
         // connections.addUser(room_name, user_name);
 
@@ -51,10 +53,10 @@ socket.on('connect', (sockt) => {
 
     });
 
-    sockt.on('generate',fu =>{
+    sockt.on('generate', fu => {
 
 
-fu(randval());
+        fu(randval());
 
     });
 
@@ -81,11 +83,24 @@ fu(randval());
 
     });
 
-    socket.on('turn', (user) => {
+    sockt.on('turn', (user) => {
 
         socket.sockets.in(user.room_name).emit('tellturn', user.username);
 
+    });
+
+    sockt.on('down',(data)=>{
+
+sockt.to(data.room_name).emit('mover',{x:data.x,y:data.y});
+
+    });
+
+    sockt.on('currentw',(crrw)=>{
+
+sockt.to(sockt.room_name).emit('saveword',crrw);
+
     })
+
 
 
 
@@ -98,7 +113,11 @@ fu(randval());
     })
 
 
+sockt.on('disconnect',(reason)=>{
 
+socket.sockets.in(sockt.room_name).emit('remove',sockt.id);
+
+});
 
 })
 
