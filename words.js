@@ -1,13 +1,8 @@
-const Arr = [
-    "table",
-    "door",
-    "computer","java","javascript","banana","brush"
-];
+const Arr =
+    [ "table", "door", "computer", "java", "javascript", "banana", "brush" ];
 
 module.exports = () => {
-    // random index 
+  // random index
 
-
-
-    return Arr[Math.floor(Math.random()*Arr.length)];
+  return Arr[Math.floor(Math.random() * Arr.length)];
 }

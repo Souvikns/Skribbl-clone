@@ -1,5 +1,3 @@
-setTimeout(()=>{
-
-console.log('run');
-
-},4000);
+setTimeout(() => {
+  console.log('run');
+}, 4000);
