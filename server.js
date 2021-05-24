@@ -133,7 +133,13 @@ socket.on('connect', (sockt) => {
 
     sockt.on('mssg', (info) => {
 
+if(info.msg === Allcon.rooms.get(sockt.room_name).currentword){
 
+    socket.sockets.in(info.room_name)
+    .emit('message', { name: info.user_name, message: 'Guessed correctly'});
+
+    return;
+}
         socket.sockets.in(info.room_name)
             .emit('message', { name: info.user_name, message: info.msg });
 
@@ -141,6 +147,19 @@ socket.on('connect', (sockt) => {
 
 
     sockt.on('disconnect', (reason) => {
+
+        Allcon.rooms.get(sockt.room_name).users.forEach((u,index)=>{
+
+if(index === Allcon.rooms.get(sockt.room_name).TurnCount){
+
+    Allcon.rooms.get(sockt.room_name).TurnCount = 0;
+console.log('dis' ,  Allcon.rooms.get(sockt.room_name).TurnCount);
+}
+if(u.id === sockt.id){
+    Allcon.rooms.get(sockt.room_name).users.splice(index,1);
+}
+
+        });
 
         socket.sockets.in(sockt.room_name).emit('remove', sockt.id);
 
