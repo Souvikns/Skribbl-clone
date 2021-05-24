@@ -3,54 +3,59 @@
  * - room object 
  * - room object -users 
  */
-
-
-
-
-class User {
-    constructor(name){
-        this.name = name;
-        this.score = 0;
-    }
-};
-
+const User = require('./utils/User');
 
 class Room {
-    constructor(name, users){
+    constructor(name) {
         this.name = name;
-        this.users = users;
+        this.users = [];
         this.TurnCount = 0;
         this.hasGameStarted = false;
-        this.UserToDraw = users[0];
+        this.currentword = 'null';
+        this.UserToDraw = 0;
     }
 
-    addUser(user){
+    addUser(user) {
         this.users.push(user);
     }
+
+getusers(){
+    return this.users;
+}
+
 }
 
 
 class Connection {
-    constructor(){
-        this.rooms = []
+    constructor() {
+        this.rooms = new Map();
     }
 
-    addUser(room_name, user_name){
-        let foundRoom = this.rooms.filter(room.name === room_name);
-        
-        if(Array.isArray(foundRoom) && foundRoom.length === 0){
-            this.rooms.push(new Room(room, [new User(user_name)]));
-            return;
+
+    addmembertoroom(roomname,username,id) {
+
+        this.rooms.get(roomname).addUser(new User(username,roomname,id));
+
+    }
+
+    addnewroom(roomname, username, id) {
+
+        if (this.rooms.has(roomname)) {
+            this.addmembertoroom(roomname, username, id);
+        } else {
+            this.rooms.set(roomname, new Room(roomname));
+            this.addmembertoroom(roomname, username, id);
         }
 
-        foundRoom[0].addUser(new User(user_name));
+
     }
+
+
 }
 
-let connections = new Connection();
 
-module.exports  = {
-    User,
+module.exports = {
+
     Room,
-    connections
+    Connection
 }

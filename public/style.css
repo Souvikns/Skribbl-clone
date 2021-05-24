@@ -166,6 +166,14 @@ font-size: 50px;
 	left: 0;
 	right: 0;
 }
+
+#start{
+
+position: absolute;
+left: 30%;
+top: 40%;
+
+}
 .cancol{
 background-color: #242c37;
 height: 1000px;

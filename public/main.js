@@ -4,11 +4,14 @@ const form = document.getElementById('chat-form');
 const ulist = document.getElementById('users');
 const chatmessages = document.querySelector('.chat-messages');
 const fetchword = document.getElementById('worrd');
-const countdown = document.getElementById('timer');
+const countdown = document.getElementById('tame');
 const cancont = document.querySelector('.cancol');
+const startbtn = document.getElementById('start');
+const yw = document.getElementById('yword');
+
 var timer = 20;
-var currentturn="";
-var currentword="";
+var currentturn = 0;
+var currentword = "";
 
 canvas.width = cancont.offsetWidth;
 canvas.height = cancont.offsetHeight;
@@ -70,6 +73,26 @@ io.on('remove', (id) => {
 
 });
 
+// event for receiving counter as well as saving word
+io.on('ready', counter => {
+
+    currentturn = counter;
+     console.log(currentturn);
+
+    console.log('ready called');
+
+    if(allusers[currentturn].username === user_name){
+        io.emit('generate', (word) => {
+// console.log(word);
+yw.innerText = "draw "+word;
+            currentword = word;
+            timeer();
+        });
+    }
+
+});
+
+
 // event for saving word
 
 io.on('saveword', (crw) => {
@@ -78,13 +101,22 @@ io.on('saveword', (crw) => {
 
 })
 
-// function for timer
-const time = () => {
+/*function for timer that send current 
+time of current user to all the players*/
+const timeer = () => {
 
-    setInterval(() => {
+  var inco  = setInterval(() => {
         if (timer !== 0) {
-            countdown.innerText = timer--;
+            timer-=1;
+            countdown.innerText = timer;
 
+            io.emit('time', timer);
+            console.log(timer);
+        } else {
+            timer = 20;
+            io.emit('ipoint',0);
+            clearInterval(inco);
+            letsgo();
         }
 
 
@@ -93,31 +125,11 @@ const time = () => {
 }
 
 
-setInterval(() => {
-    timer = 20;
-   // context.clearRect(0,0,canvas.width,canvas.height);
-   // context.beginPath();
-    pointer++;
-    currentturn = allusers[pointer%allusers.length].username;
-    if (currentturn === user_name) {
-        io.emit('generate', (val) => {
-
-           // fetchword.innerText = val;
-
-        });
-        io.emit('currentw', currentword);
-    //    time();
-
-    }
 
 
+io.on('telltime', (tim) => {
 
-}, 5000);
-
-
-
-io.on('tellturn', (name) => {
-
+countdown.innerText = tim;
     /* display name in ui */
 
 });
@@ -129,7 +141,7 @@ io.on('ondrawtoclient', ({ x, y }) => {
 
     // context.lineTo(x,y);
     // context.stroke();
-    console.log(x, y);
+   // console.log(x, y);
     // context.moveTo(x,y);
 
     // x = e.clientX - canvas.offsetLeft;
@@ -156,23 +168,29 @@ io.on('message', (me) => {
 
 io.on('mover', ({ x, y }) => {
 
-        context.moveTo(x, y);
+    context.moveTo(x, y);
 
-    
-})
+
+});
+
+io.on('updatecount',(con)=>{
+
+currentturn = con;
+
+});
 
 var x, y;
-var lastx,lasty;
+var lastx, lasty;
 var mdown = false;
 window.onmousedown = e => {
 
-    if (currentturn === user_name) {
+    if (allusers[currentturn].username === user_name) {
 
-        
-   //     context.beginPath();
-        
-        
-         context.moveTo(x, y);
+
+        //     context.beginPath();
+
+
+        context.moveTo(x, y);
         // context.lineTo(x,y);
         // context.closePath();
         // context.stroke();
@@ -198,7 +216,7 @@ canvas.addEventListener('touchmove', (e) => {
     if (mdown && currentturn === user_name) {
 
 
-     //   context.beginPath();
+        //   context.beginPath();
 
         io.emit('draw', { x, y, room_name });
         //  context.moveTo(x, y);
@@ -219,14 +237,14 @@ window.onmousemove = e => {
     x = e.clientX;
     y = e.clientY;
     // console.log(x,y);
-    if (mdown && currentturn === user_name) {
+    if (mdown && allusers[currentturn].username === user_name) {
         io.emit('draw', { x, y, room_name });
-       
-        context.lineTo(x,y);
-      //  context.closePath();
+
+        context.lineTo(x, y);
+        //  context.closePath();
         context.stroke();
-console.log(x,y);
-        
+     //   console.log(x, y);
+
         // x = e.clientX - canvas.offsetLeft;
         // y = e.clientY - canvas.offsetTop;
 
@@ -252,3 +270,36 @@ function displayusers() {
 
 
 }
+
+// func to other user to start game
+
+var letsgo = () =>{
+
+    if (allusers[currentturn].username === user_name) {
+
+        console.log('startgame fun');
+                io.emit('startgame', 1);
+            }
+}
+
+// game start by first player
+
+var startgame = () => {
+
+    if (allusers[0].username === user_name) {
+
+console.log('startgame fun');
+        io.emit('startgame', 1);
+    } else {
+        alert('you cant start game!');
+    }
+
+}
+
+
+startbtn.addEventListener('click', (e) => {
+    e.preventDefault();
+console.log('game started');
+    startgame();
+
+});

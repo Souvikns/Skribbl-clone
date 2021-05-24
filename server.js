@@ -4,7 +4,7 @@ const path = require('path');
 const User = require('./utils/User');
 const mongoose = require('mongoose');
 const randval = require('./words');
-//const { Room, User,connections } = require('./data');
+const { Room, Connection } = require('./data');
 
 
 
@@ -22,7 +22,7 @@ const socket = require('socket.io')(httpserver, {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-let connections = [];
+let Allcon = new Connection();
 
 // socket connection function
 socket.on('connect', (sockt) => {
@@ -38,14 +38,15 @@ socket.on('connect', (sockt) => {
         // create a new room default 1 user will be there 
         // connections.addUser(room_name, user_name);
 
-        const newuser = new User(user_name, room_name, sockt.id);
-        console.log(newuser.username);
-        connections.push(newuser);
+        //    const newuser = new User(user_name, room_name, sockt.id);
+        // console.log(newuser.username);
+        // connections.push(newuser);
 
+        Allcon.addnewroom(room_name, user_name, sockt.id);
         sockt.join(room_name);
         console.log('you joined', room_name, user_name);
-        console.log(connections);
-        var allusers = connections.filter(user => user.room_name === room_name);
+        console.log(Allcon);
+        var allusers = Allcon.rooms.get(room_name).getusers();
         console.log(allusers);
         socket.sockets.in(room_name).emit('sendall', allusers);
         //sockt.emit('sendall',allusers);
@@ -53,12 +54,38 @@ socket.on('connect', (sockt) => {
 
     });
 
+    /* event for starting thw game */
+    sockt.on('startgame', val => {
+
+        socket.in(sockt.room_name).emit('ready', Allcon.rooms.get(sockt.room_name).TurnCount);
+        //   sockt.to(sockt.room_name).emit('ready', Allcon.rooms.get(sockt.room_name).TurnCount);
+
+    })
+
+
     sockt.on('generate', fu => {
 
-
-        fu(randval());
+        const gen = randval();
+        Allcon.rooms.get(sockt.room_name).currentword = gen;
+        fu(gen);
 
     });
+
+    // event for time
+    sockt.on('time', (timer) => {
+
+        sockt.to(sockt.room_name).emit('telltime', timer);
+
+    });
+
+    // event for inc pointer for a room
+
+    sockt.on('ipoint', (p) => {
+
+        Allcon.rooms.get(sockt.room_name).TurnCount =
+            (Allcon.rooms.get(sockt.room_name).TurnCount + 1) % Allcon.rooms.get(sockt.room_name).users.length;
+        sockt.emit('updatecount',Allcon.rooms.get(sockt.room_name).TurnCount);
+    })
 
     sockt.on('draw', (data) => {
 
@@ -89,15 +116,15 @@ socket.on('connect', (sockt) => {
 
     });
 
-    sockt.on('down',(data)=>{
+    sockt.on('down', (data) => {
 
-sockt.to(data.room_name).emit('mover',{x:data.x,y:data.y});
+        sockt.to(data.room_name).emit('mover', { x: data.x, y: data.y });
 
     });
 
-    sockt.on('currentw',(crrw)=>{
+    sockt.on('currentw', (crrw) => {
 
-sockt.to(sockt.room_name).emit('saveword',crrw);
+        sockt.to(sockt.room_name).emit('saveword', crrw);
 
     })
 
@@ -113,11 +140,11 @@ sockt.to(sockt.room_name).emit('saveword',crrw);
     })
 
 
-sockt.on('disconnect',(reason)=>{
+    sockt.on('disconnect', (reason) => {
 
-socket.sockets.in(sockt.room_name).emit('remove',sockt.id);
+        socket.sockets.in(sockt.room_name).emit('remove', sockt.id);
 
-});
+    });
 
 })
 
