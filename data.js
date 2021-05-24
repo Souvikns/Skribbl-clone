@@ -3,7 +3,7 @@
  * - room object
  * - room object -users
  */
-const User = require('./utils/User');
+const User = require("./utils/User");
 
 class Room {
   constructor(name) {
@@ -11,25 +11,29 @@ class Room {
     this.users = [];
     this.TurnCount = 0;
     this.hasGameStarted = false;
-    this.currentword = 'null';
+    this.currentword = "null";
     this.UserToDraw = 0;
   }
 
-  addUser(user) { this.users.push(user); }
+  addUser(user) {
+    this.users.push(user);
+  }
 
-  getusers() { return this.users; }
+  getusers() {
+    return this.users;
+  }
 }
 
 class Connection {
-  constructor() { this.rooms = new Map(); }
+  constructor() {
+    this.rooms = new Map();
+  }
 
   addmembertoroom(roomname, username, id) {
-
     this.rooms.get(roomname).addUser(new User(username, roomname, id));
   }
 
   addnewroom(roomname, username, id) {
-
     if (this.rooms.has(roomname)) {
       this.addmembertoroom(roomname, username, id);
     } else {
@@ -40,7 +44,6 @@ class Connection {
 }
 
 module.exports = {
-
   Room,
-  Connection
-}
+  Connection,
+};
